@@ -4,6 +4,7 @@ use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use App\Resource\DownloadResource;
 use App\Action\DownloadAction;
+use GuzzleHttp\Client;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -18,9 +19,13 @@ return function (ContainerBuilder $containerBuilder) {
             );
             return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
         },
+        HttpClient::class => function(ContainerInterface $c) {
+            return new Client();
+        },
         DownloadAction::class => function(ContainerInterface $c) {
-            $downloadResource = new \App\Resource\DownloadResource($c->get(EntityManager::class));
+            $downloadResource = new \App\Resource\DownloadResource($c->get(EntityManager::class), $c->get(HttpClient::class));
             return new App\Action\DownloadAction($downloadResource);
-        }
+        },
+        
     ]);
 };

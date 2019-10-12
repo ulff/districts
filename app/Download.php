@@ -73,16 +73,8 @@ class Download
                     ];
 
                    print_r($data);
-
-
-
-                    //$response = $response->find()
-                    //$response = explode("|", strip_tags(str_replace('</div><div>', '|', $response)));
-                    //var_dump($name);
                 }
             }
-
-            
         }
        
         return $response;

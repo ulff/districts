@@ -37,7 +37,7 @@ class Districts
     /**
      * @var int
      *
-     * @ORM\Column(type="int")
+     * @ORM\Column(type="integer")
      */
     private $population;
 
@@ -109,29 +109,7 @@ class Districts
         return $this->area;
     }
 
-    /**
-     * Set population.
-     *
-     * @param \int $population
-     *
-     * @return Districts
-     */
-    public function setPopulation(\int $population)
-    {
-        $this->population = $population;
-
-        return $this;
-    }
-
-    /**
-     * Get population.
-     *
-     * @return \int
-     */
-    public function getPopulation()
-    {
-        return $this->population;
-    }
+   
 
     /**
      * Set city.
@@ -155,5 +133,29 @@ class Districts
     public function getCity()
     {
         return $this->city;
+    }
+
+    /**
+     * Set population.
+     *
+     * @param int $population
+     *
+     * @return Districts
+     */
+    public function setPopulation($population)
+    {
+        $this->population = $population;
+
+        return $this;
+    }
+
+    /**
+     * Get population.
+     *
+     * @return int
+     */
+    public function getPopulation()
+    {
+        return $this->population;
     }
 }

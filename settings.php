@@ -34,7 +34,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'app/Entity'
                 ],
                 'auto_generate_proxies' => true,
-                'proxy_dir' =>  __DIR__.'/../cache/proxies',
+                'proxy_dir' =>  __DIR__.'/cache/proxies',
                 'cache' => null,
             ],
         ]
