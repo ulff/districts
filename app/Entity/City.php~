@@ -1,0 +1,37 @@
+<?php
+namespace App\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Districts;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="cities")
+ */
+class City
+{
+    /**
+     * @var int
+     * 
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * 
+     * @ORM\OneToMany(targetEntity="Districts", mappedBy="city")
+     * @var Doctrine\Common\Collection\ArrayCollection
+     */
+    private $districts;
+
+    
+}

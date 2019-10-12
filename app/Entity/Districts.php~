@@ -1,0 +1,53 @@
+<?php
+namespace App\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\City;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="districts")
+ */
+class Districts 
+{
+
+    /**
+     * @var int
+     * 
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $area;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="int")
+     */
+    private $population;
+
+        /**
+     * @var City[]|ArrayCollection
+     *
+     * @ORM\ManyToOne(targetEntity="City", inversedBy="districts")
+     * @ORM\JoinColumn(name="city_id", referencedColumnName="id", nullable=false)
+     * @var \entities\City
+     */
+    private $city;
+
+}
