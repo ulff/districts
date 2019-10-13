@@ -10,14 +10,13 @@ use App\Entity\City;
 
 class DownloadResource extends AbstractResource
 {
-    public function fetchAllFromUrl() 
+    public function getNew() 
     {
         foreach (CITIES as $city) {
             $countDistrict = 1;
             
-            while ($countDistrict!=-1 && $countDistrict < 10) {
+            while ($countDistrict!=-1 && $countDistrict < 30) {
                 $newUrl = $city['url'].$countDistrict;
-                //echo $newUrl.'<br/>';
                 try {
                     $response = $this->httpClient->get($newUrl);
                     $responseCode = $response->getStatusCode();
@@ -31,8 +30,6 @@ class DownloadResource extends AbstractResource
                 
                 if($responseCode<400 && strlen(trim(strip_tags($responseBody))) > 0) {
                     $countDistrict++;
-                    
-                    echo $countDistrict.'<br/>';
                     if($city['name'] == "Gdańsk") {
                         if(!empty($city['url'])) {
                             $response = explode("|", strip_tags(str_replace('</div><div>', '|', $responseBody)));
@@ -82,6 +79,11 @@ class DownloadResource extends AbstractResource
                             $parser = new Parser();
                             $districtName = str_replace("&nbsp;", " ", htmlentities($districtName));
                             $districtName = explode(" ",$districtName);
+                            $districtName = array_filter($districtName, 
+                                                function($districtName){
+                                                    return !empty($districtName) || $districtName !== "";
+                                                });
+                            $districtName = array_values($districtName);
                             unset($districtName[0]);
                             unset($districtName[1]);
                             $districtName = implode(" ", $districtName);

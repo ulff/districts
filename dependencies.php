@@ -26,6 +26,10 @@ return function (ContainerBuilder $containerBuilder) {
             $downloadResource = new \App\Resource\DownloadResource($c->get(EntityManager::class), $c->get(HttpClient::class));
             return new App\Action\DownloadAction($downloadResource);
         },
+        DistrictsAction::class => function(ContainerInterface $c) {
+            $districtsResource = new \App\Resource\DistrictsResource($c->get(EntityManager::class));
+            return new App\Action\DistrictsAction($districtsResource);
+        },
         
     ]);
 };

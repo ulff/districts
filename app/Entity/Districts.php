@@ -23,7 +23,7 @@ class Districts
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, options={"collation":"utf8_polish_ci"})
      */
     private $name;
 
@@ -158,4 +158,5 @@ class Districts
     {
         return $this->population;
     }
+
 }

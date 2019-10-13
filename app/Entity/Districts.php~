@@ -37,7 +37,7 @@ class Districts
     /**
      * @var int
      *
-     * @ORM\Column(type="int")
+     * @ORM\Column(type="integer")
      */
     private $population;
 
@@ -50,4 +50,88 @@ class Districts
      */
     private $city;
 
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return Districts
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set area.
+     *
+     * @param float $area
+     *
+     * @return Districts
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area.
+     *
+     * @return float
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+   
+
+    /**
+     * Set city.
+     *
+     * @param \App\Entity\City $city
+     *
+     * @return Districts
+     */
+    public function setCity(\App\Entity\City $city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * Get city.
+     *
+     * @return \App\Entity\City
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
 }

@@ -39,6 +39,13 @@ const CITIES = [
         ]
 ];
 
-$app->get('/api/download/all', DownloadAction::class.':fetchAllFromUrl');
+$app->get('/api/download/all', DownloadAction::class.':insertFromUrl');
+
+$app->post('/api/cities/{cityName}/districts', DistrictsAction::class.':addDistrict');
+$app->put('/api/cities/{cityName}/districts', DistrictsAction::class.':updateDistrict');
+$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict');
+
+$app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict');
+
 
 $app->run();

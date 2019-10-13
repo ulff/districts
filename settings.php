@@ -27,7 +27,9 @@ return function (ContainerBuilder $containerBuilder) {
                 'port' => 3306,
                 'dbname' => 'findYourDistricts',
                 'user' => 'root',
-                'password' => 'password'
+                'password' => 'password',
+                'charset'   => 'utf8',
+                'collation' => 'utf8_polish_ci',
             ],
             'meta' => [
                 'entity_path' => [

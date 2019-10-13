@@ -21,9 +21,9 @@ class DownloadAction
         return $response->withStatus(404, 'No photo found with slug ');
     }
 
-    public function fetchAllFromUrl(Request $request, Response $response)
+    public function insertFromUrl(Request $request, Response $response)
     {
-        $download = $this->downloadResource->fetchAllFromUrl();
+        $download = $this->downloadResource->getNew();
 
         return $response->withStatus(200, 'OK');
     }
