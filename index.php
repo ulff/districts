@@ -8,6 +8,8 @@ use App\Download;
 use GuzzleHttp\Client;
 use App\Resource\DownloadResource;
 use App\Action\DownloadAction;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 
 require_once __DIR__ . '/vendor/autoload.php';
 // Instantiate PHP-DI ContainerBuilder
@@ -25,6 +27,7 @@ $dependencies($containerBuilder);
 AppFactory::setContainer($containerBuilder->build());
 $app = AppFactory::create();
 
+$app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 
 const CITIES = [
     0 => [
@@ -43,7 +46,8 @@ $app->get('/api/download/all', DownloadAction::class.':insertFromUrl');
 
 $app->post('/api/cities/{cityName}/districts', DistrictsAction::class.':addDistrict');
 $app->put('/api/cities/{cityName}/districts', DistrictsAction::class.':updateDistrict');
-$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict');
+
+$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete');
 
 $app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict');
 

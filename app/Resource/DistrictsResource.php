@@ -22,6 +22,7 @@ class DistrictsResource
             if($query) {
                 foreach ($query as $district) {
                     $response[] = array(
+                        'id' => $district->getId(),
                         'name' => $district->getName(), 
                         'population' => $district->getPopulation(),
                         'area' => $district->getArea(),
@@ -68,7 +69,6 @@ class DistrictsResource
                     ->setParameter('city', $cityName);
         }
         $orderName = 'd.'.$name;
-
         $query = $query->orderBy($orderName, $order)
                         ->getQuery();
         try {
@@ -138,22 +138,38 @@ class DistrictsResource
 
     }
 
-    public function filtr($filtres)
+    public function filtr($filtres, $cityName)
     {
         $query = $this->entityManager->getRepository('App\Entity\Districts')
                 ->createQueryBuilder('d')
                 ->select('d')
                 ->innerJoin('d.city', 'c');
+
         foreach ($filtres as $filtrK => $filtr) {
             $data = explode("|", $filtr);
             if(sizeof($data)==2) {
-                $where = 'd.'.$filtrK.' between '.$data[0].' and '.$data[1];
-                $query = $query->andWhere($where);
+                if($data[0]!="" && $data[1]!="") {
+                    $where = 'd.'.$filtrK.' between '.$data[0].' and '.$data[1];
+                    $query = $query->andWhere($where);
+                } elseif($data[0]=="" && $data[1!=""]) {
+                    $where = 'd.'.$filtrK.' <= '.$data[1];
+                    $query = $query->andWhere($where);
+                } elseif($data[1]=="" && $data[0]!="") {
+                    $where = 'd.'.$filtrK.' >= '.$data[0];
+                    $query = $query->andWhere($where);
+                }
             } elseif ( sizeof($data) == 1) {
-                $where = 'd.'.$filtrK.' > '.$data[0];
-                $query = $query->andWhere($where);
+                if($data[0]!="") {
+                    $where = 'd.'.$filtrK.' > '.$data[0];
+                    $query = $query->andWhere($where);
+                }
             }
         }
+        if($cityName!="all") {
+            $query = $query->andWhere('c.name = :city')
+                    ->setParameter('city', $cityName);
+        }
+
         try {
             $query = $query->getQuery()     
                 ->getResult();
