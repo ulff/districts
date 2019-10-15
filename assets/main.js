@@ -8,7 +8,7 @@ $(function() {
         var city = districtForm.find('select[name="city"]');
 
         $.ajax({
-            url: '/api/cities/'+city.val()+'/districts',
+            url: '/districts/'+city.val(),
             method: 'GET',
             data: {
                 population: populationFrom.val()+'|'+populationTo.val(),
@@ -29,13 +29,21 @@ $(function() {
     $('table').on('click','.asc, .desc' ,function(){
         var sortName = $(this).parent().attr('id');
         var order = $(this).attr('class');
+        var districtForm = $('#districtForm');
+        var populationFrom = districtForm.find('input[name="populationFrom"]');
+        var populationTo = districtForm.find('input[name="populationTo"]');
+        var areaFrom = districtForm.find('input[name="areaFrom"]');
+        var areaTo = districtForm.find('input[name="areaTo"]');
+        var city = districtForm.find('select[name="city"]');
 
         $.ajax({
-            url: '/api/cities/all/districts',
+            url: '/districts/'+city.val(),
             method: 'GET',
             data: {
                 sort: sortName,
-                order: order
+                order: order,
+                population: populationFrom.val()+'|'+populationTo.val(),
+                area: areaFrom.val()+'|'+areaTo.val()
             },
             success: function(data) {
                 var parser = new DOMParser();
@@ -46,8 +54,6 @@ $(function() {
             },
             error: function(data) {}
         });
-
-        console.log(sortName);
         return false;
     });
 });

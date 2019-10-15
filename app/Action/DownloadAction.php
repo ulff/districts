@@ -14,17 +14,12 @@ class DownloadAction
         $this->downloadResource = $downloadResource;
     }
 
-    public function insertAll(Request $request, Response $response)
-    {
-        $download = $this->downloadResource->get();
-        var_dump($download);
-        return $response->withStatus(404, 'No photo found with slug ');
-    }
-
     public function insertFromUrl(Request $request, Response $response)
     {
         $download = $this->downloadResource->getNew();
-
-        return $response->withStatus(200, 'OK');
+        $response->getBody()->write(json_encode('Download'));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
     }
 }

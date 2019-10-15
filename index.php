@@ -3,8 +3,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
-use App\Districts;
-use App\Download;
 use GuzzleHttp\Client;
 use App\Resource\DownloadResource;
 use App\Action\DownloadAction;
@@ -42,14 +40,24 @@ const CITIES = [
         ]
 ];
 
+/**
+ * API
+ */
 $app->get('/api/download/all', DownloadAction::class.':insertFromUrl');
-
 $app->post('/api/cities/{cityName}/districts', DistrictsAction::class.':addDistrict');
 $app->put('/api/cities/{cityName}/districts', DistrictsAction::class.':updateDistrict');
+$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete.api');
+$app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict')->setName('fetch.api');
 
-$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete');
-
-$app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict');
+/**
+ * WEB
+ */
+$app->get('/districts/add', DistrictsAction::class.':addDistrict')->setName('add');
+$app->post('/districts/add', DistrictsAction::class.':addDistrict')->setName('add');
+$app->get('/districts/edit/{districtId}', DistrictsAction::class.':editDistrict')->setName('edit');
+$app->post('/districts/update/{districtId}', DistrictsAction::class.':updateDistrict')->setName('update');
+$app->get('/districts/delete/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete');
+$app->get('/districts[/{cityName}]', DistrictsAction::class.':fetchDistrict')->setName('fetch');
 
 
 $app->run();

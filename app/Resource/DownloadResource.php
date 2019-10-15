@@ -1,21 +1,38 @@
 <?php
-
 namespace App\Resource;
 
-use App\Resource\AbstractResource;
-use App\Parser;
 use App\Entity\Districts;
 use App\Entity\City;
+use Doctrine\ORM\EntityManager;
+use GuzzleHttp\ClientInterface;
 
-
-class DownloadResource extends AbstractResource
+class DownloadResource 
 {
+    protected $entityManager = null;
+    protected $httpClient = null;
+
+    public function __construct(EntityManager $entityManager, ClientInterface $httpClient)
+    {
+        $this->entityManager = $entityManager;
+        $this->httpClient = $httpClient;
+    }
+
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
     public function getNew() 
     {
         foreach (CITIES as $city) {
             $countDistrict = 1;
             
-            while ($countDistrict!=-1 && $countDistrict < 30) {
+            while ($countDistrict!=-1 && $countDistrict < 100) {
                 $newUrl = $city['url'].$countDistrict;
                 try {
                     $response = $this->httpClient->get($newUrl);
@@ -76,7 +93,6 @@ class DownloadResource extends AbstractResource
                                 }
                             }
                             $districtData = explode(":",$districtData);
-                            $parser = new Parser();
                             $districtName = str_replace("&nbsp;", " ", htmlentities($districtName));
                             $districtName = explode(" ",$districtName);
                             $districtName = array_filter($districtName, 
@@ -87,10 +103,13 @@ class DownloadResource extends AbstractResource
                             unset($districtName[0]);
                             unset($districtName[1]);
                             $districtName = implode(" ", $districtName);
+                            $districtArea = str_replace(",", ".",$districtData[1]);
+                            $ha = floatval($districtArea);
+                            $changeHaToKm = $districtArea*0.01;
                             
                             $data = [
                                 trim(html_entity_decode($districtName)),
-                                $parser->changeHectaresToKm(floatval(str_replace(",", ".",$districtData[1]))), 
+                                $changeHaToKm, 
                                 floatval(str_replace(",", ".",$districtData[2]))
                             ];
                         }

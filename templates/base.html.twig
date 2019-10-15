@@ -11,8 +11,13 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container"> 
+    {% if message|e %}
+        <p class="info">{{ message }}</p>
+    {% endif %}
+    <a href="{{ url_for('add') }}" class="btn btn-secondary btn-lg m-2">Dodaj nowy</a>
     {% block body %}{% endblock %}
+
 </div>
 </body>
 </html>

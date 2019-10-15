@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Edit District
+{% endblock %}
+
+{% block body %}
+        <form action="
+        {% if districtId|e %} 
+            {{ url_for('update', {districtId: districtId}) }} 
+        {% else %} 
+            {{ url_for('add') }} 
+        {% endif %}" 
+            method="POST">
+            <div class="row">
+                <div class="col-2">
+                    <select name="city" class="browser-default custom-select">
+                        <option value="">Wybierz</option>
+                        <option value="Gdańsk" {% if city == 'Gdańsk' %} selected {% endif %} >Gdańsk</option>
+                        <option value="Kraków" {% if city == 'Kraków' %} selected {% endif %}>Kraków</option>
+                    </select>
+                </div>
+                <div class="col-10">
+                <input type="text" name="name" value="{{ name }}" placeholder="Nazwa" />
+                <input type="text" name="population" value="{{ population }}" placeholder="Ludność (np.2000)" />
+                <input type="text" name="area" value="{{ area }}" placeholder="Powierzchnia(km2) (np. 24.6)" />
+                <input type="hidden" name="id" value="{{ districtId }}"  />
+                <input type="submit" name="submit" value="Dodaj" class="btn btn-secondary btn-lg"/>
+                </div>
+            </div>
+        </form>
+    
+{% endblock %}

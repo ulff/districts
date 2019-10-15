@@ -5,22 +5,13 @@ use DI\ContainerBuilder;
 define('APP_ROOT', __DIR__);
 
 return function (ContainerBuilder $containerBuilder) {
-    // Global Settings Object
     $containerBuilder->addDefinitions([
         'settings' => [
-            'displayErrorDetails' => true, // Should be set to false in production
-        
+            'displayErrorDetails' => true,
         'doctrine' => [
-            // if true, metadata caching is forcefully disabled
             'dev_mode' => true,
-
-            // path where the compiled metadata info will be cached
-            // make sure the path exists and it is writable
-            'cache_dir' => APP_ROOT . '/var/doctrine',
-
-            // you should add any other path containing annotated entity classes
+            'cache_dir' => false,
             'metadata_dirs' => [APP_ROOT . '/src/Domain'],
-
             'connection' => [
                 'driver' => 'pdo_mysql',
                 'host' => 'mysql',

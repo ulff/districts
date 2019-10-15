@@ -1,17 +1,34 @@
 <?php
 namespace App\Resource;
 
-use Doctrine\ORM\EntityManager;
+use App\Resource\AbstractResource;
 use App\Entity\Districts;
 use App\Entity\City;
 
-class DistrictsResource
+class DistrictsResource extends AbstractResource
 {
-    protected $entityManager = null;
-
-    public function __construct(EntityManager $entityManager)
+    public function fetchById($districtId)
     {
-        $this->entityManager = $entityManager;
+        $response = array();
+        try {
+            $query = $this->entityManager->getRepository('App\Entity\Districts')->findOneBy(
+                array('id' => (Int)$districtId)
+            );
+            if($query) {
+                $response[] = array(
+                    'id' => $query->getId(),
+                    'name' => $query->getName(), 
+                    'population' => $query->getPopulation(),
+                    'area' => $query->getArea(),
+                    'city' => $query->getCity()->getName()
+                );
+            }   
+            $responseCode = (count($response)>0) ? 200 : 404;
+        } catch (\Throwable $th) {
+            $responseCode = 400;
+            $response = ['Bad request'];
+        }                      
+        return [$responseCode, $response];
     }
 
     public function fetchByName($cityName = 'all')
@@ -57,15 +74,38 @@ class DistrictsResource
         return [$responseCode, $response];
     }
 
-    public function sortBy($cityName = 'all', $name, $order = 'asc')
+    public function sortBy($cityName = 'all', $name, $order = 'asc', $filtres)
     {
         $response = array();
         $query = $this->entityManager->getRepository('App\Entity\Districts')
                 ->createQueryBuilder('d')
                 ->select('d')
                 ->innerJoin('d.city', 'c');
+
+        foreach ($filtres as $filtrK => $filtr) {
+            $data = explode("|", $filtr);
+           
+            if(sizeof($data)==2) {
+                if($data[0]!="" && $data[1]!="") {
+                    $where = 'd.'.$filtrK.' between '.$data[0].' and '.$data[1];
+                    $query = $query->andWhere($where);
+                } elseif($data[0]=="" && $data[1]!="") {
+                    var_dump($data);
+                    $where = 'd.'.$filtrK.' <= '.$data[1];
+                    $query = $query->andWhere($where);
+                } elseif($data[1]=="" && $data[0]!="") {
+                    $where = 'd.'.$filtrK.' >= '.$data[0];
+                    $query = $query->andWhere($where);
+                }
+            } elseif ( sizeof($data) == 1) {
+                if($data[0]!="") {
+                    $where = 'd.'.$filtrK.' > '.$data[0];
+                    $query = $query->andWhere($where);
+                }
+            }
+        }
         if($cityName!='all') {
-            $query = $query->where('c.name = :city')
+            $query = $query->andWhere('c.name = :city')
                     ->setParameter('city', $cityName);
         }
         $orderName = 'd.'.$name;
@@ -94,36 +134,73 @@ class DistrictsResource
 
     public function add($name, $population, $area, $cityName)
     {
-        $district = $this->entityManager->getRepository('App\Entity\Districts')->findByName($name);
-        if(!$district) {
+        try {
             $city = $this->entityManager->getRepository('App\Entity\City')->findOneBy(
                 array('name' => $cityName)
             );
-
             if(!$city) {
                 $city = new City();
-                $city->setName($city);
+                $city->setName($cityName);
                 $this->entityManager->persist($city);
                 $this->entityManager->flush();
-                $cityId = $city->getId();
-            } 
+                
+            }
+            $cityId = $city->getId();
+            try {
+                $district = $this->entityManager->getRepository('App\Entity\Districts')->findOneBy(
+                    array(
+                        'name' => $name,
+                        'city' => $cityId
+                    ));
 
-            $districts = new Districts();
-            $districts->setName($name);
-            $districts->setArea($area);
-            $districts->setPopulation($population);
-            $districts->setCity($city);
-            $this->entityManager->persist($districts);
-            $this->entityManager->flush();
-            return [202, 'New District added'];
-        } 
-        return [409, 'District already exist'];
+                if(!$district) {
+                    $districts = new Districts();
+                    $districts->setName($name);
+                    $districts->setArea($area);
+                    $districts->setPopulation($population);
+                    $districts->setCity($city);
+                    $this->entityManager->persist($districts);
+                    $this->entityManager->flush();
+                    $responseCode = 202;
+                    $response = ['New District added'];
+                }
+            } catch (\Throwable $th) {
+                $responseCode = 409;
+                $response = ['District with this city already exist'];
+            }
+        } catch (\Throwable $th) {
+            $responseCode = 400;
+            $response = ['Bad request'];
+        }                   
+        return [$responseCode, $response];
     }
 
-    public function updateDistrict($name, $population, $area, $city, $id)
+    public function update($name, $population, $area, $cityName, $districtId)
     {
+        $district = $this->entityManager->getRepository('App\Entity\Districts')->findOneBy(
+            array('id' => $districtId,));
+        
+        if($district) {
+            $city = $this->entityManager->getRepository('App\Entity\City')->findOneBy(
+                array('name' => $cityName)
+            );
+            if(!$city) {
+                $city = new City();
+                $city->setName($cityName);
+                $this->entityManager->persist($city);
+                $this->entityManager->flush();
+            }
 
-    }
+            $district->setName($name);
+            $district->setArea($area);
+            $district->setPopulation($population);
+            $district->setCity($city);
+            $this->entityManager->flush();
+            return [202, 'Update'];
+        } 
+        return [409, 'Bad Request - problem with id'];
+    } 
+
     public function delete($id)
     {
         $district = $this->entityManager->getRepository('App\Entity\Districts')->findOneBy(
@@ -135,7 +212,6 @@ class DistrictsResource
             return [200, 'Delete'];
         }
         return [404, 'Bad Request'];
-
     }
 
     public function filtr($filtres, $cityName)
@@ -151,7 +227,7 @@ class DistrictsResource
                 if($data[0]!="" && $data[1]!="") {
                     $where = 'd.'.$filtrK.' between '.$data[0].' and '.$data[1];
                     $query = $query->andWhere($where);
-                } elseif($data[0]=="" && $data[1!=""]) {
+                } elseif($data[0]=="" && $data[1]!="") {
                     $where = 'd.'.$filtrK.' <= '.$data[1];
                     $query = $query->andWhere($where);
                 } elseif($data[1]=="" && $data[0]!="") {

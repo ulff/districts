@@ -15,21 +15,21 @@
                 </select>
             </div>  
             <div class="col-4">
-                <p>Powierzchnia</p>
-                <div class="form-group">
-                    <input type="text" name="areaFrom" value="" placeholder="Od" />
-                </div>
-                <div class="form-group">
-                    <input type="text" name="areaTo" value="" placeholder="Do" />
-                </div>
-            </div>
-            <div class="col-4">
                 <p>Ludność</p>
                 <div class="form-group">
                     <input type="text" name="populationFrom" value="" placeholder="Od" />
                 </div>
                 <div class="form-group">
                     <input type="text" name="populationTo" value="" placeholder="Do" />
+                </div>
+            </div>
+            <div class="col-4">
+                <p>Powierzchnia</p>
+                <div class="form-group">
+                    <input type="text" name="areaFrom" value="" placeholder="Od" />
+                </div>
+                <div class="form-group">
+                    <input type="text" name="areaTo" value="" placeholder="Do" />
                 </div>
             </div>
             <div class="col-2">
@@ -58,7 +58,10 @@
                 <td>{{ district.population }}</td>
                 <td>{{ district.area }}</td>
                 <td>{{ district.city }}</td>
-                <td><a href="{{ url_for('delete', {'cityName' : district.city, 'districtId': district.id}) }}">Usuń</a></td>
+                <td>
+                    <a href="{{ url_for('delete', {'cityName' : district.city, 'districtId': district.id}) }}">Usuń</a>
+                    <a href="{{ url_for('edit', {'districtId': district.id}) }}">Edytuj</a>
+                </td>
             </tr>  
         {% endfor %}
         </tbody>
