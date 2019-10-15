@@ -28,11 +28,11 @@ $app = AppFactory::create();
 $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 
 const CITIES = [
-    0 => [
-        'id' => 1, 
-        'name' => 'Gdańsk', 
-        'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
-    ],
+    // 0 => [
+    //     'id' => 1, 
+    //     'name' => 'Gdańsk', 
+    //     'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
+    // ],
     1 => [
         'id' => 2, 
         'name' => 'Kraków', 
@@ -58,6 +58,13 @@ $app->get('/districts/edit/{districtId}', DistrictsAction::class.':editDistrict'
 $app->post('/districts/update/{districtId}', DistrictsAction::class.':updateDistrict')->setName('update');
 $app->get('/districts/delete/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete');
 $app->get('/districts[/{cityName}]', DistrictsAction::class.':fetchDistrict')->setName('fetch');
+
+$app->get('/', function(Request $request, Response $response, $args){
+    $response->getBody()->write(json_encode(getenv('MYSQL_HOST')));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
+});
 
 
 $app->run();

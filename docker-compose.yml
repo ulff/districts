@@ -13,7 +13,11 @@ php:
   volumes: 
     - .:/var/www/
   environment:
-    XDEBUG_CONFIG: remote_host=host.docker.internal
+    - XDEBUG_CONFIG=remote_host=host.docker.internal
+    - MYSQL_HOST=mysql
+    - MYSQL_DBNAME=findYourDistricts
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=password
   links:
     - mysql
 
