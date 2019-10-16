@@ -75,13 +75,18 @@ class DistrictsAction
                 if($add[0]<400) {
                     return $response->withStatus(302)->withHeader('Location', '/districts');
                 } else {
+                    if($data[0]==400) {
+                        $message = 'Wystąpił błąd';
+                    } else {
+                        $message = 'Istnieje juz taka dzielnica';
+                    }
                     return $this->view->render($response, 'edit.html.twig',[
                         'name'          => $data['name'],
                         'city'          => $data['city'],
                         'population'    => $data['population'],
                         'area'          => $data['area'],
                         'districtId'    => '',
-                        'message'       => 'Wystąpił błąd'
+                        'message'       => $message
                     ]);   
                 }
             } else {

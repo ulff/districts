@@ -164,6 +164,9 @@ class DistrictsResource extends AbstractResource
                     $this->entityManager->flush();
                     $responseCode = 202;
                     $response = ['New District added'];
+                } else {
+                    $responseCode = 409;
+                    $response = ['District with this city already exist'];
                 }
             } catch (\Throwable $th) {
                 $responseCode = 409;
@@ -179,7 +182,7 @@ class DistrictsResource extends AbstractResource
     public function update($name, $population, $area, $cityName, $districtId)
     {
         $district = $this->entityManager->getRepository('App\Entity\Districts')->findOneBy(
-            array('id' => $districtId,));
+            array('id' => $districtId));
         
         if($district) {
             $city = $this->entityManager->getRepository('App\Entity\City')->findOneBy(
