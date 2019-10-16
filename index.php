@@ -36,7 +36,7 @@ const CITIES = [
     1 => [
         'id' => 2, 
         'name' => 'Kraków', 
-        'url' => 'http://appimeri.um.krakow.pl/app-pub-dzl/pages/DzlViewGlw.jsf?id='
+        'url' => '//appimeri.um.krakow.pl/app-pub-dzl/pages/DzlViewGlw.jsf?id='
         ]
 ];
 
