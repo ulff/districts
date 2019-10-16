@@ -28,11 +28,11 @@ $app = AppFactory::create();
 $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 
 const CITIES = [
-    // 0 => [
-    //     'id' => 1, 
-    //     'name' => 'Gdańsk', 
-    //     'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
-    // ],
+    0 => [
+        'id' => 1, 
+        'name' => 'Gdańsk', 
+        'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
+    ],
     1 => [
         'id' => 2, 
         'name' => 'Kraków', 
@@ -44,27 +44,24 @@ const CITIES = [
  * API
  */
 $app->get('/api/download/all', DownloadAction::class.':insertFromUrl');
+
 $app->post('/api/cities/{cityName}/districts', DistrictsAction::class.':addDistrict');
 $app->put('/api/cities/{cityName}/districts', DistrictsAction::class.':updateDistrict');
-$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete.api');
-$app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict')->setName('fetch.api');
+$app->delete('/api/cities/{cityName}/districts/{districtId}', DistrictsAction::class.':deleteDistrict');
+$app->get('/api/cities/{cityName}/districts', DistrictsAction::class.':fetchDistrict');
 
 /**
  * WEB
  */
-$app->get('/districts/add', DistrictsAction::class.':addDistrict')->setName('add');
-$app->post('/districts/add', DistrictsAction::class.':addDistrict')->setName('add');
+$app->map(['GET', 'POST'],'/districts/add', DistrictsAction::class.':addDistrict')->setName('add');
 $app->get('/districts/edit/{districtId}', DistrictsAction::class.':editDistrict')->setName('edit');
 $app->post('/districts/update/{districtId}', DistrictsAction::class.':updateDistrict')->setName('update');
-$app->get('/districts/delete/{districtId}', DistrictsAction::class.':deleteDistrict')->setName('delete');
+$app->post('/districts/delete[/{districtId}]', DistrictsAction::class.':deleteDistrict')->setName('delete');
 $app->get('/districts[/{cityName}]', DistrictsAction::class.':fetchDistrict')->setName('fetch');
+$app->get('/districts/all/{districtId}', DistrictsAction::class.':showDistrict')->setName('show');
 
 $app->get('/', function(Request $request, Response $response, $args){
-    $response->getBody()->write(json_encode(getenv('MYSQL_HOST')));
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus(200);
+    return $response->withStatus(302)->withHeader('Location', '/districts');
 });
-
 
 $app->run();

@@ -84,7 +84,6 @@ class DistrictsResource extends AbstractResource
 
         foreach ($filtres as $filtrK => $filtr) {
             $data = explode("|", $filtr);
-           
             if(sizeof($data)==2) {
                 if($data[0]!="" && $data[1]!="") {
                     $where = 'd.'.$filtrK.' between '.$data[0].' and '.$data[1];
@@ -108,9 +107,11 @@ class DistrictsResource extends AbstractResource
             $query = $query->andWhere('c.name = :city')
                     ->setParameter('city', $cityName);
         }
-        $orderName = 'd.'.$name;
-        $query = $query->orderBy($orderName, $order)
-                        ->getQuery();
+        if($name!="") {
+            $orderName = 'd.'.$name;
+            $query = $query->orderBy($orderName, $order);
+        }
+        $query = $query->getQuery();
         try {
             $query = $query->getResult();
             if($query) {

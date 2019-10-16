@@ -30,7 +30,7 @@ class DistrictsAction
                 $fetch = $this->districtsResource->filtr($params, $args['cityName']); 
             }
         } else {
-            $cityName = (isset($args['cityName'])) ?? 'all';
+            $cityName = $args['cityName'] ?? 'all';
             $fetch = $this->districtsResource->fetchByName($cityName); 
         }
            
@@ -53,9 +53,10 @@ class DistrictsAction
         $header = $request->getHeader('Accept');
         if($header && $header[0] == 'application/json') {
             $requestBody = json_decode($request->getBody());
-            if(!is_null($requestBody) && sizeof($requestBody->districts) == 1) {
-                foreach ($requestBody->districts as $arg) {
+            if(!empty($requestBody)) {
+                foreach ($requestBody as $arg) {
                     $add = $this->districtsResource->add($arg->name, $arg->population, $arg->area, $arg->city);
+                    break;
                 }
             } else {
                 $add = array(404, 'Bad Request');
@@ -84,7 +85,7 @@ class DistrictsAction
                     ]);   
                 }
             } else {
-                if((!is_numeric($data['population']) || !is_numeric($data['area'])) && !empty($data)) {
+                if((!is_numeric($data['population']) || !is_numeric($data['area']) || empty($data['city']) || empty($data['name'])) && !empty($data) ) {
                     return $this->view->render($response, 'edit.html.twig',[
                         'name'          => $data['name'],
                         'city'          => $data['city'],
@@ -108,18 +109,23 @@ class DistrictsAction
 
     public function deleteDistrict(Request $request, Response $response, $args)
     {
-        $delete = $this->districtsResource->delete($args['districtId']); 
+        $params = $request->getParsedBody();
+        if(!empty($params) || !empty($args)) {
+            $districtId = $args['districtId'] ?? $params['districtId'];
+            $delete = $this->districtsResource->delete($districtId); 
 
-        $header = $request->getHeader('Accept');
-        if($header && $header[0] == 'application/json') {
-            $write = json_encode($delete[1]);
-            $response->getBody()->write($write);
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus($delete[0]);
-        } else {
-            if($delete[0]<400) {
-                return $response->withStatus(302)->withHeader('Location', '/districts', ['message' => 'Usunięty']);
+            $header = $request->getHeader('Accept');
+            if($header && $header[0] == 'application/json') {
+                $write = json_encode($delete[1]);
+                $response->getBody()->write($write);
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus($delete[0]);
+            } else {
+                $write = json_encode($delete[0]);
+                $response->getBody()->write($write);
+                return $response
+                    ->withStatus($delete[0]);
             }
         }
     }
@@ -145,7 +151,29 @@ class DistrictsAction
                 'districtId'    => $args['districtId'],
             ]);  
         }
+    }
 
+    public function showDistrict(Request $request, Response $response, $args)
+    {
+        $header = $request->getHeader('Accept');
+        $fetch = $this->districtsResource->fetchById($args['districtId']);
+        if($header && $header[0] == 'application/json') {
+            $write = json_encode($fetch[1]);
+
+            $response->getBody()->write($write);
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus($fetch[0]);
+        } else {
+            
+            return $this->view->render($response, 'show.html.twig',[
+                'name'          => $fetch[1][0]['name'],
+                'city'          => $fetch[1][0]['city'],
+                'population'    => $fetch[1][0]['population'],
+                'area'          => $fetch[1][0]['area'],
+                'districtId'    => $args['districtId'],
+            ]);  
+        }
     }
 
     public function updateDistrict(Request $request, Response $response, $args)
@@ -153,9 +181,10 @@ class DistrictsAction
         $header = $request->getHeader('Accept');
         if($header && $header[0] == 'application/json') {
             $requestBody = json_decode($request->getBody());
-            if(!is_null($requestBody) && sizeof($requestBody->districts) == 1) {
-                foreach ($requestBody->districts as $arg) {
-                    $add = $this->districtsResource->update($arg->name, $arg->population, $arg->area, $arg->city);
+            if(!is_null($requestBody)) {
+                foreach ($requestBody as $arg) {
+                    $add = $this->districtsResource->update($arg->name, $arg->population, $arg->area, $arg->city, $arg->districtId);
+                    break;
                 }
             } else {
                 $add = array(404, 'Bad Request');

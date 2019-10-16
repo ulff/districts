@@ -56,4 +56,24 @@ $(function() {
         });
         return false;
     });
+
+    $('table').on('click','.delete' ,function(){
+        var districtId = $(this).attr('data-id');
+        var thisDelete = $(this);
+
+        $.ajax({
+            url: '/districts/delete',
+            method: 'POST',
+            data: {
+                districtId: districtId,
+            },
+            success: function(data) {
+                if(data<400) {
+                    thisDelete.parent().parent().hide("slow", function() { $(this).remove() });
+                }
+            },
+            error: function(data) {}
+        });
+        return false;
+    });
 });

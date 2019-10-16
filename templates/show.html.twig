@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    District {{ name }}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-10">
+            <h2>{{ city }} - {{ name }} </h2>
+            <p>Ludność: {{ population }}</p>
+            <p>Powierzchnia: {{ area }} km2</p>
+        </div>
+    </div>
+    
+{% endblock %}

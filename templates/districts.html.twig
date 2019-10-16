@@ -47,7 +47,7 @@
                 <th scope="col" id="population">Ludność <a href="#" class="desc">up</a>/<a href="#" class="asc">down</a></th>
                 <th scope="col" id="area">Powierzchnia (km2) <a href="#" class="desc">up</a>/<a href="#" class="asc">down</a></th>
                 <th scope="col" id="city">Miasto <a href="#" class="desc">up</a>/<a href="#" class="asc">down</a></th>
-                <th scope="col">Action</th>
+                <th scope="col">Opcje</th>
             </thead>
         </tr>
         <tbody>
@@ -59,8 +59,9 @@
                 <td>{{ district.area }}</td>
                 <td>{{ district.city }}</td>
                 <td>
-                    <a href="{{ url_for('delete', {'cityName' : district.city, 'districtId': district.id}) }}">Usuń</a>
+                    <a href="{{ url_for('delete', {'cityName' : district.city, 'districtId': district.id}) }}" class="delete" data-id="{{ district.id }}">Usuń</a>
                     <a href="{{ url_for('edit', {'districtId': district.id}) }}">Edytuj</a>
+                    <a href="{{ url_for('show', {'cityName' : district.city, 'districtId': district.id}) }}">Pokaz</a>
                 </td>
             </tr>  
         {% endfor %}
