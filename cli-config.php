@@ -18,10 +18,6 @@ $settings($containerBuilder);
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
 
-
-// $settings = include 'src/settings.php';
-// $settings = $settings['settings']['doctrine'];
-
 $doctrineSetting = $container->get('settings')['doctrine'];
 
 $config = Setup::createAnnotationMetadataConfiguration(
