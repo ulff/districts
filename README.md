@@ -41,11 +41,11 @@ All requests must be sent with header 'Accept: application/json'
 
 To insert all districts from Gdańsk and Kraków you have to go to url:
 
-`http:://localhost:8080/api/download/all`
+`http://localhost:8080/api/download/all`
 
 To add new district you have to go to url:
 
-`http:://localhost:8080/api/cities/{cityName}/districts`
+`http://localhost:8080/api/cities/{cityName}/districts`
 
 where cityName is Kraków or Gdańsk. You must use POST method and in body you have to put for example:
 
@@ -62,7 +62,7 @@ where cityName is Kraków or Gdańsk. You must use POST method and in body you h
 
 To update district you have to go to url:
 
-`http:://localhost:8080/api/cities/{cityName}/districts`
+`http://localhost:8080/api/cities/{cityName}/districts`
 
 where cityName is Kraków or Gdańsk. You must use PUT method and in body you have to put for example:
 
@@ -80,7 +80,7 @@ where cityName is Kraków or Gdańsk. You must use PUT method and in body you ha
 
 To delete district you have to go to url:
 
-`http:://localhost:8080/api/cities/{cityName}/districts/{districtId}`
+`http://localhost:8080/api/cities/{cityName}/districts/{districtId}`
 
 where cityName is Kraków or Gdańsk. You must use DELETE method districtId is id witch you want to delete.
 
