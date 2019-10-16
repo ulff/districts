@@ -32,7 +32,7 @@ class DownloadResource
         foreach (CITIES as $city) {
             $countDistrict = 1;
             
-            while ($countDistrict!=-1 && $countDistrict < 5) {
+            while ($countDistrict!=-1 && $countDistrict < 2) {
                 $newUrl = $city['url'].$countDistrict;
                 try {
                     $response = $this->httpClient->get($newUrl);
