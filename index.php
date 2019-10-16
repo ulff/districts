@@ -28,15 +28,15 @@ $app = AppFactory::create();
 $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 
 const CITIES = [
-    // 0 => [
-    //     'id' => 1, 
-    //     'name' => 'Gdańsk', 
-    //     'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
-    // ],
+    0 => [
+        'id' => 1, 
+        'name' => 'Gdańsk', 
+        'url' => 'https://www.gdansk.pl/subpages/dzielnice/[dzielnice]/html/dzielnice_mapa_alert.php?id='
+    ],
     1 => [
         'id' => 2, 
         'name' => 'Kraków', 
-        'url' => '//appimeri.um.krakow.pl/app-pub-dzl/pages/DzlViewGlw.jsf?id='
+        'url' => 'http://appimeri.um.krakow.pl/app-pub-dzl/pages/DzlViewGlw.jsf?id='
         ]
 ];
 
