@@ -11,7 +11,7 @@ return function (ContainerBuilder $containerBuilder) {
             'doctrine' => [
                 'dev_mode' => true,
                 'cache_dir' => false,
-                'metadata_dirs' => [APP_ROOT . '/src/Domain'],
+                'metadata_dirs' => [APP_ROOT . '/Core/Domain'],
                 'connection' => [
                     'driver' => 'pdo_mysql',
                     'host' => getenv('MYSQL_HOST'),
