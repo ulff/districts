@@ -31,6 +31,10 @@ return function (ContainerBuilder $containerBuilder) {
             $districtsResource = new \App\Resource\DistrictsResource($c->get(EntityManager::class));
             return new App\Action\DistrictsAction($districtsResource, $c->get(Twig::class)) ;
         },
+        CityAction::class => function(ContainerInterface $c) {
+          $cityRepository = new \Core\Infra\InMemory\InMemoryCityRepository();
+          return new App\Action\CityAction($cityRepository, $c->get(Twig::class));
+        },
         Twig::class => function (ContainerInterface $c) {
             $view = new Twig(__DIR__ . '/templates', [
                 'cache'       => false,

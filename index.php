@@ -40,6 +40,13 @@ const CITIES = [
         ]
 ];
 
+
+/**
+ * API 2.0
+ */
+$app->post('/api/2.0/cities', CityAction::class.':addCity');
+
+
 /**
  * API
  */
